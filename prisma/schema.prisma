@@ -17,17 +17,18 @@ datasource db {
 
 // User schema
 model User {
-  id_user      Int       @id @default(autoincrement())
+  id_user      Int        @id @default(autoincrement())
   name         String
-  username     String    @unique
+  username     String     @unique
   password     String
   statusUser   Status
-  created_date DateTime  @default(now())
+  created_date DateTime   @default(now())
   update_date  DateTime?
   delete_date  DateTime?
   roleId       Int //Ini adalah inputan untuk mengambil id dari role.
-  role         Role?     @relation(fields: [role_id], references: [id_role])
+  role         Role?      @relation(fields: [role_id], references: [id_role])
   role_id      Int
+  bin_number   BinKartu[]
 }
 
 enum Status {
@@ -47,12 +48,35 @@ model Role {
   menu_roles  MenuRoles[]
 }
 
+//------------------Model diatas sudah done--------------------//
+
+//MappingCode schema
+model Mappingcode {
+  id         Int        @id @default(autoincrement())
+  code       String
+  definition String
+  status     StatusCode
+  isActive   Status
+  priority   Int
+  created_at DateTime   @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
+}
+
+enum StatusCode {
+  Sukses
+  Gagal
+}
+
 // Menus schema
 model Menus {
   id_menu    Int         @id @default(autoincrement())
   menu_name  String
   path_route String
   parent_id  Int
+  created_at DateTime    @default(now())
+  updated_at DateTime?
+  deleted_at DateTime?
   menu_roles MenuRoles[]
 }
 
@@ -64,31 +88,29 @@ model Menus {
 
 // MenuRoles schema
 model MenuRoles {
-  id_menu_roles Int     @id @default(autoincrement())
+  id_menu_roles Int       @id @default(autoincrement())
   menu_id       Int?
   role_id       Int?
-  role          Role[]
-  menu          Menus[]
+  created_at    DateTime  @default(now())
+  updated_at    DateTime?
+  deleted_at    DateTime?
+  role          Role?     @relation(fields: [id_role], references: [id_role])
+  menu          Menus?    @relation(fields: [id_menu], references: [id_menu])
+  id_role       Int?
+  id_menu       Int?
 }
 
-model Mappingcode {
-  id         Int       @id @default(autoincrement())
-  code       String
-  definition String
-  status     StatusCode
-  isActive   isActive
-  priority   Int
-  created_at DateTime  @default(now())
-  updated_at DateTime?
-  deleted_at DateTime?
-}
+model BinKartu {
+  id_BIN             Int       @id @default(autoincrement())
+  bin_number         Int       @unique
+  bank_name          String
+  card_type          String?
+  updated_by         String?
+  created_at         DateTime  @default(now())
+  updated_at         DateTime?
+  deleted_at         DateTime?
+  user               User?     @relation(fields: [inserted_by_userId], references: [id_user])
+  inserted_by_userId Int
+  userId       Int //Ini adalah inputan untuk mengambil id dari role.
 
-enum StatusCode {
-  Sukses
-  Gagal
-}
-
-enum isActive {
-  Yes
-  No
 }

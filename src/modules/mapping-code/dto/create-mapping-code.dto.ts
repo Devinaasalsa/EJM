@@ -1,4 +1,4 @@
-import { StatusCode, isActive } from '@prisma/client';
+import { Status, StatusCode,  } from '@prisma/client';
 import { IsNotEmpty } from 'class-validator';
 
 export class MappingCodeDto {
@@ -15,5 +15,5 @@ export class MappingCodeDto {
   priority: number;
 
   @IsNotEmpty({ message: 'Active is required' })
-  isActive: isActive;
+  isActive: Status;
 }

@@ -8,6 +8,7 @@ import { LoggingMiddleware } from '../middleware/logging.middleware';
 import { RolesModule } from '../roles/roles.module';
 import { MenusModule } from '../menus/menus.module';
 import { MappingcodeModule } from '../mapping-code/mapping-code.module';
+import { BinkartuModule } from '../binkartu/binkartu.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MappingcodeModule } from '../mapping-code/mapping-code.module';
     RolesModule,
     MenusModule,
     MappingcodeModule,
+    BinkartuModule,
     ConfigModule.forRoot(
       { 
         isGlobal: true, 

@@ -16,7 +16,7 @@ import { MappingcodeService } from './mapping-code.service';
 import { MappingCodeDto } from './dto/create-mapping-code.dto';
 
 @Controller('mappingcode')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class MappingcodeController {
   constructor(private readonly mappingcodeService: MappingcodeService) {}
 

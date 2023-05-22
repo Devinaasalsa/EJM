@@ -7,12 +7,15 @@ import {
 } from '@nestjs/common';
 // import { CreateMappingcodeDto } from './dto/create-mappingcode.dto';
 // import { UpdateMappingcodeDto } from './dto/update-mappingcode.dto';
-import { Prisma, Mappingcode } from '@prisma/client';
+import { Prisma, Mappingcode, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { response } from 'express';
 import { PS_EXCEPTIONS } from 'src/shared/constants/postgres.constants';
 // import { Message } from '../interface/message.interface';
+import { prismaExclude } from "prisma-exclude";
 
+export const prisma = new PrismaClient();
+export const exclude = prismaExclude(prisma);
 @Injectable()
 export class MappingcodeService {
   constructor(private prisma: PrismaService) { }
@@ -23,11 +26,11 @@ export class MappingcodeService {
   */
 
   async create(data: Prisma.MappingcodeCreateInput): Promise<Mappingcode> {
-      return this.prisma.mappingcode.create({
-        data:{
-          ...data
-        }
-      });
+    return this.prisma.mappingcode.create({
+      data: {
+        ...data
+      }
+    });
   }
 
 
@@ -37,13 +40,13 @@ export class MappingcodeService {
 
   async findAllCode() {
     return await this.prisma.mappingcode.findMany({
+      select: exclude("mappingcode", ["created_at", "updated_at", "deleted_at"]),
       where: {
         deleted_at: null
-      }
-    })
+      },
+    }
+    )
   }
-
-
   /**
   * Find Code by id and check is the record has deleted or not/
   * @param userId 
@@ -97,12 +100,12 @@ export class MappingcodeService {
           deleted_at: true,
         }
       }
-      )
+    )
 
-      if (isDeletedNotNull && isDeletedNotNull.deleted_at !== null) {
-        throw new BadRequestException(`[${+id}] This record is has been deleted`)
-      }
-  
+    if (isDeletedNotNull && isDeletedNotNull.deleted_at !== null) {
+      throw new BadRequestException(`[${+id}] This record is has been deleted`)
+    }
+
     return await this.prisma.mappingcode.update({
       where: {
         id: +id,
@@ -111,7 +114,7 @@ export class MappingcodeService {
     });
   }
 
-  
+
   /**
   *Update mapping code by changing column deleted_at null to datetime
   *and check if data with id is not available, then throw error not found
